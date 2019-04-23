@@ -86,7 +86,7 @@ public class Serial {
 		 					//create row for every element
 		 					Row row1 = sheet.createRow(temp+1);
 		 					Element nElement = (Element) nNode;
-		 					//read elements by tag name, start writing from second row (temp+1), first is header
+		 					//read elements by tag, start writing from second row (temp+1), first is header
 		 					row1.createCell(0).setCellValue(createHelper
 		 					.createRichTextString(nElement.getAttribute("ID")));
 		 					row1.createCell(1).setCellValue(createHelper.createRichTextString(nElement
