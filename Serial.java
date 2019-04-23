@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
@@ -14,6 +15,7 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -32,13 +34,19 @@ import org.xml.sax.SAXException;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import com.thoughtworks.xstream.XStream;
 
 public class Serial {
 	
 	private static final String csvFile = "valuesBNM.csv";
 	public static void main (String[] args) throws IOException, ParserConfigurationException, SAXException, TransformerException {
-	//create workbook
-	XSSFWorkbook wb = new XSSFWorkbook();
+	
+		XStream xstream = new XStream();
+        xstream.processAnnotations(ValCurs.class);
+        xstream.processAnnotations(Valute.class);
+		
+		//create workbook
+        XSSFWorkbook wb = new XSSFWorkbook();
         XSSFCreationHelper createHelper = wb.getCreationHelper(); 
 		try (Reader reader = Files.newBufferedReader(Paths.get(csvFile));
 		            CSVReader csvReader = new CSVReaderBuilder(reader).build();
@@ -46,7 +54,7 @@ public class Serial {
 		        	// Reading All Records at once into a List<String[]>
 		            List<String[]> records = csvReader.readAll();
 			for (String[] record : records) {
-            		System.out.print(record[0]);//output url from csv
+        		System.out.print(record[0] + "\n");//output url from csv to console
 			 //read xml from url           	
 			 URL url = new URL(record[0]); 
 			 URLConnection conn = url.openConnection();
@@ -57,7 +65,21 @@ public class Serial {
 			 //transform instance 
 			 TransformerFactory transformerFactory= TransformerFactory.newInstance();
 			 Transformer xform = transformerFactory.newTransformer();
-			 xform.transform(new DOMSource(doc), new StreamResult(System.out)); //output xml in console 
+		//	 xform.transform(new DOMSource(doc), new StreamResult(System.out)); //output xml in console 
+			 xform.setOutputProperty(OutputKeys.INDENT, "yes");
+			 
+			 //xml to xmlString
+			 StreamResult result = new StreamResult(new StringWriter());
+			 DOMSource source = new DOMSource(doc);
+			 xform.transform(source, result);
+			 	
+			 String xmlString = result.getWriter().toString();
+		//	 System.out.println(xmlString); //output String xml in console
+			 
+			 ValCurs valCurs = (ValCurs)xstream.fromXML(xmlString);
+		         for(Valute currentVal : valCurs.getValutes())  {
+		            System.out.println("CurentVal: " + currentVal);
+		        }
 			 //read document, normalize xml content
 			 doc.getDocumentElement().normalize();
 			 //create node list for root element
@@ -86,7 +108,7 @@ public class Serial {
 		 					//create row for every element
 		 					Row row1 = sheet.createRow(temp+1);
 		 					Element nElement = (Element) nNode;
-		 					//read elements by tag, start writing from second row (temp+1), first is header
+		 					//read elements by tag name, start writing from second row (temp+1), first is header
 		 					row1.createCell(0).setCellValue(createHelper
 		 					.createRichTextString(nElement.getAttribute("ID")));
 		 					row1.createCell(1).setCellValue(createHelper.createRichTextString(nElement
