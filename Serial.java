@@ -54,7 +54,7 @@ public class Serial {
 		        	// Reading All Records at once into a List<String[]>
 		            List<String[]> records = csvReader.readAll();
 			for (String[] record : records) {
-        		System.out.print(record[0] + "\n");//output url from csv to console
+        		System.out.println(record[0]);//output url from csv to console
 			 //read xml from url           	
 			 URL url = new URL(record[0]); 
 			 URLConnection conn = url.openConnection();
