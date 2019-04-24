@@ -90,7 +90,10 @@ public class Serial {
 		 			if (dNode.getNodeType() == Node.ELEMENT_NODE) {
 		 			Element dElement = (Element) dNode;
 		 			//read attribute Date of root element, create sheets with similar name
-		 			XSSFSheet sheet = wb.createSheet(dElement.getAttribute("Date")); 
+		 			XSSFSheet sheet = wb.createSheet(dElement.getAttribute("Date"));
+					//maybe someone need a copy of every xml file on his computer?)	
+				//	FileOutputStream outStream = new FileOutputStream(new File(dElement.getAttribute("Date") + ".xml"));             ));
+		 		//	xform.transform(new DOMSource(doc), new StreamResult(outStream));	
 		 			//Create first row as header
 		 			Row row = sheet.createRow(0);
 		 			row.createCell(0).setCellValue("ID");
@@ -127,7 +130,7 @@ public class Serial {
 		 		}//for
 			}//for
 		}//try
-		//create output stream for writing values to file 
+		//create output stream for writing values to workbook  
 	try (OutputStream fileOut = new FileOutputStream("valcuuuuuuurs.xlsx")) {
          wb.write(fileOut);
          wb.close();
