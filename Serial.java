@@ -1,8 +1,10 @@
 package mvn.Lab2;
 
+//import java.io.File; //used to create a copy of xml files
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+//import java.io.ObjectOutputStream; //used for serialization
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringWriter;
