@@ -75,7 +75,7 @@ public class Serial {
 			 	
 			 String xmlString = result.getWriter().toString();
 		//	 System.out.println(xmlString); //output String xml in console
-			 
+			 //Deserializing an Object
 			 ValCurs valCurs = (ValCurs)xstream.fromXML(xmlString);
 		         for(Valute currentVal : valCurs.getValutes())  {
 		            System.out.println("CurentVal: " + currentVal);
@@ -91,10 +91,22 @@ public class Serial {
 		 			Element dElement = (Element) dNode;
 		 			//read attribute Date of root element, create sheets with similar name
 		 			XSSFSheet sheet = wb.createSheet(dElement.getAttribute("Date"));
-					//maybe someone need a copy of every xml file on his computer?)	
+					//create a copy of every xml file on his computer?)	
 				//	FileOutputStream outStream = new FileOutputStream(new File(dElement.getAttribute("Date") + ".xml"));
 				//	xform.transform(new DOMSource(doc), new StreamResult(outStream));	
-		 			//Create first row as header
+		 			//Serializing an Object to .ser file, every date as new document
+          			// 	try {
+				//     	   	FileOutputStream fileOut =
+				//	       	new FileOutputStream(dElement.getAttribute("Date") + ".ser");
+ 		 		//         	ObjectOutputStream out = new ObjectOutputStream(fileOut);
+ 		 		//         	out.writeObject(doc);
+ 		 		//         	out.close();
+ 		 		//        	fileOut.close();
+ 		 		//        	 System.out.printf("%nSerialized data is saved in %s.ser%n", dElement.getAttribute("Date"));
+ 		 		//     	} catch (IOException i) {
+ 		 		//         i.printStackTrace();
+ 		 		//      	   }
+					//Create first row as header
 		 			Row row = sheet.createRow(0);
 		 			row.createCell(0).setCellValue("ID");
 		 			row.createCell(1).setCellValue("NumCode");
